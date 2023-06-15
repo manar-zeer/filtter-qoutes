@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create website header design</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      />
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <button type="button" class="btn";> Login</button>
+        </nav>
+
+        <!-- content -->
+
+        <div class="conent">
+            <h1>Popular Quotes</h1>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Itaque tempora, quidem optio veniam dolor
+                ducimus consectetur eum, est harum et non neque officia voluptate! Recusandae beatae veniam accusantium
+                ullam error?</p>
+            <form action="">
+                <input type="text"
+                id="search"
+                placeholder="Enter search string"/>
+                <i class="fa fa-fw fa-search search-icon"></i>
+                
+
+            </form>
+        </div>
+
+
+    </div>
+  
+  </div>
+  <div id="card-container">
+    <div class="list">
+        <p class="author"></p>
+      <p class="quote"></p>
+    </div>
+  </div>
+
+  <script>
+    const cardContainer = document.getElementById("card-container");
+    let filteredQuotes = [];
+    let quotes = [];
+
+    const renderQuotes = (quotes) => {
+      quotes.forEach((quote) => {
+        const card = document.createElement("div");
+        card.className = "list";
+
+        const authorElement = document.createElement("p");
+        authorElement.className = "author";
+        authorElement.textContent = `${quote.author}`;
+
+        const quoteElement = document.createElement("p");
+        quoteElement.className = "quote";
+        quoteElement.textContent = quote.quote;
+
+        card.appendChild(authorElement);
+        card.appendChild(quoteElement);
+        cardContainer.appendChild(card);
+      });
+    };
+
+    const handleFilterChange = () => {
+      const filterInput = document.getElementById("search");
+      const filterString = filterInput.value.toLowerCase();
+
+      const filteredQuotes = quotes.filter(
+        (quote) =>
+          quote.quote.toLowerCase().includes(filterString) ||
+          quote.author.toLowerCase().includes(filterString)
+      );
+
+      cardContainer.innerHTML = "";
+
+      if (filteredQuotes.length > 0) {
+        renderQuotes(filteredQuotes);
+      } else {
+        alert("Not found.");
+        renderQuotes(quotes);
+      }
+    };
+
+    function fetchQuotes() {
+      fetch("https://dummyjson.com/quotes")
+        .then((response) => response.json())
+        .then((data) => {
+          quotes = data.quotes; 
+          filteredQuotes = quotes;
+          const filterInput = document.getElementById("search");
+          filterInput.addEventListener("input", handleFilterChange);
+          renderQuotes(quotes);
+          handleFilterChange();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          cardContainer.innerHTML = "Failed to fetch quotes.";
+        });
+    }
+
+    fetchQuotes();
+  </script>
+</body>
+</html>
